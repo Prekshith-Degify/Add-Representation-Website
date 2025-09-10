@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AdShowcase - Products & Services Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .hero {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 3rem 1rem;
+      text-align: center;
+      color: white;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff6b6b;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      user-select: none;
+    }
+    .post-form {
+      max-width: 500px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .service-provider {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .service-provider {
+        grid-template-columns: 1fr;
+      }
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1 class="text-4xl font-extrabold mb-2">AdShowcase</h1>
+    <p class="text-lg max-w-xl mx-auto">Discover amazing products and trusted service providers. Post your ads and find the best discounts!</p>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Ad Posting Widget -->
+    <section aria-label="Post a new product or service ad" class="mb-12">
+      <h2 class="text-2xl font-bold mb-4 text-center text-gray-900">Post Your Ad</h2>
+      <form id="adPostForm" class="post-form" aria-describedby="formInstructions" novalidate>
+        <p id="formInstructions" class="mb-4 text-gray-700 text-center">Fill in the details below to post your product or service ad.</p>
+        <div class="mb-4">
+          <label for="adTitle" class="block font-semibold mb-1">Title <span class="text-red-600">*</span></label>
+          <input type="text" id="adTitle" name="adTitle" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Product or Service Name" />
+        </div>
+        <div class="mb-4">
+          <label for="adDescription" class="block font-semibold mb-1">Description <span class="text-red-600">*</span></label>
+          <textarea id="adDescription" name="adDescription" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Describe your product or service"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="adPrice" class="block font-semibold mb-1">Price (USD) <span class="text-red-600">*</span></label>
+          <input type="number" id="adPrice" name="adPrice" min="0" step="0.01" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g. 49.99" />
+        </div>
+        <div class="mb-4">
+          <label for="adDiscount" class="block font-semibold mb-1">Discount (%)</label>
+          <input type="number" id="adDiscount" name="adDiscount" min="0" max="100" step="1" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Optional discount percentage" />
+        </div>
+        <div class="mb-4">
+          <label for="adCategory" class="block font-semibold mb-1">Category <span class="text-red-600">*</span></label>
+          <select id="adCategory" name="adCategory" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="" disabled selected>Select category</option>
+            <option value="product">Product</option>
+            <option value="service">Service</option>
+          </select>
+        </div>
+        <div class="mb-6">
+          <label for="adImage" class="block font-semibold mb-1">Image URL</label>
+          <input type="url" id="adImage" name="adImage" placeholder="https://example.com/image.jpg" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded hover:bg-indigo-700 transition-colors">Post Ad</button>
+      </form>
+    </section>
+
+    <!-- Display Ads with Discounts -->
+    <section aria-label="Showcase of posted ads with discounts">
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Latest Ads & Discounts</h2>
+      <div id="adsContainer" class="service-provider">
+        <!-- Ads will be dynamically inserted here -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-white py-6 bg-indigo-900 mt-12">
+    &copy; 2024 AdShowcase. All rights reserved.
+  </footer>
+
+  <script>
+    // Sample initial ads data
+    const ads = [
+      {
+        title: "Wireless Headphones",
+        description: "High quality wireless headphones with noise cancellation.",
+        price: 120.00,
+        discount: 15,
+        category: "product",
+        image: "https://placehold.co/400x250/png?text=Wireless+Headphones"
+      },
+      {
+        title: "Home Cleaning Service",
+        description: "Professional home cleaning service at affordable prices.",
+        price: 80.00,
+        discount: 10,
+        category: "service",
+        image: "https://placehold.co/400x250/png?text=Cleaning+Service"
+      },
+      {
+        title: "Smartwatch",
+        description: "Stay connected with this stylish smartwatch.",
+        price: 199.99,
+        discount: 0,
+        category: "product",
+        image: "https://placehold.co/400x250/png?text=Smartwatch"
+      }
+    ];
+
+    const adsContainer = document.getElementById('adsContainer');
+    const adPostForm = document.getElementById('adPostForm');
+
+    // Function to create ad card HTML element
+    function createAdCard(ad) {
+      const card = document.createElement('article');
+      card.className = 'card fade-in';
+
+      // Image container
+      const imgWrapper = document.createElement('div');
+      imgWrapper.className = 'relative mb-4 rounded overflow-hidden';
+      const img = document.createElement('img');
+      img.src = ad.image || 'https://placehold.co/400x250/png?text=No+Image';
+      img.alt = ad.title;
+      img.className = 'w-full h-48 object-cover rounded';
+      imgWrapper.appendChild(img);
+
+      // Discount badge if discount > 0
+      if (ad.discount && ad.discount > 0) {
+        const discountBadge = document.createElement('div');
+        discountBadge.className = 'discount-badge';
+        discountBadge.textContent = `${ad.discount}% OFF`;
+        imgWrapper.appendChild(discountBadge);
+      }
+
+      card.appendChild(imgWrapper);
+
+      // Title
+      const title = document.createElement('h3');
+      title.className = 'text-xl font-semibold mb-2 text-gray-900';
+      title.textContent = ad.title;
+      card.appendChild(title);
+
+      // Description
+      const desc = document.createElement('p');
+      desc.className = 'text-gray-700 mb-3';
+      desc.textContent = ad.description;
+      card.appendChild(desc);
+
+      // Price and category
+      const priceContainer = document.createElement('div');
+      priceContainer.className = 'flex justify-between items-center text-gray-900 font-semibold';
+
+      // Calculate discounted price if discount exists
+      let priceText = `$${ad.price.toFixed(2)}`;
+      if (ad.discount && ad.discount > 0) {
+        const discountedPrice = ad.price * (1 - ad.discount / 100);
+        priceText = `<span class="line-through text-red-500 mr-2">$${ad.price.toFixed(2)}</span> <span class="text-green-700">$${discountedPrice.toFixed(2)}</span>`;
+      }
+      priceContainer.innerHTML = `<span aria-label="Price">${priceText}</span><span class="capitalize" aria-label="Category">${ad.category}</span>`;
+
+      card.appendChild(priceContainer);
+
+      return card;
+    }
+
+    // Render all ads
+    function renderAds() {
+      adsContainer.innerHTML = '';
+      if (ads.length === 0) {
+        adsContainer.innerHTML = '<p class="text-center text-white col-span-full">No ads posted yet.</p>';
+        return;
+      }
+      ads.forEach(ad => {
+        const adCard = createAdCard(ad);
+        adsContainer.appendChild(adCard);
+      });
+    }
+
+    // Form submission handler
+    adPostForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      // Simple validation
+      const title = adPostForm.adTitle.value.trim();
+      const description = adPostForm.adDescription.value.trim();
+      const price = parseFloat(adPostForm.adPrice.value);
+      const discount = adPostForm.adDiscount.value ? parseInt(adPostForm.adDiscount.value) : 0;
+      const category = adPostForm.adCategory.value;
+      const image = adPostForm.adImage.value.trim();
+
+      if (!title || !description || isNaN(price) || price < 0 || !category) {
+        alert('Please fill in all required fields with valid values.');
+        return;
+      }
+      if (discount < 0 || discount > 100) {
+        alert('Discount must be between 0 and 100.');
+        return;
+      }
+
+      // Add new ad to ads array
+      ads.unshift({
+        title,
+        description,
+        price,
+        discount,
+        category,
+        image: image || null
+      });
+
+      // Reset form
+      adPostForm.reset();
+
+      // Re-render ads
+      renderAds();
+
+      // Scroll to ads section
+      adsContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Initial render
+    renderAds();
+  </script>
+</body>
+</html>
